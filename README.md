@@ -3,7 +3,7 @@ Assorted tools for FPGA development. Visit [timetoexplore.net](http://timetoexpl
 
 ## img2fmem.py
 Image to FPGA memory map converter for use with **Verilog** $readmemh() etc.
-Uses Pillow to convert images to suitable format for FPGA use.
+Uses Python Pillow to convert images to suitable format for FPGA use.
 
 * Input is image in [any format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP etc.
 * Output is three files:
