@@ -12,6 +12,6 @@ Uses Pillow to convert images to suitable format for FPGA use.
   - PNG preview of converted image
 * img2fmem does not resize images: use your image editor to do this
 * [Pillow Docs](https://pillow.readthedocs.io)
-  - To install Pillow: pip install Pillow
+  - To install Pillow: `pip install Pillow`
 
 Learn how to [initialize memory arrays in Verilog](https://timetoexplore.net/blog/initialize-memory-in-verilog).
