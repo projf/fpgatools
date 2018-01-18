@@ -1,6 +1,6 @@
 # FPGA Tools
 Assorted tools for FPGA development. Visit [timetoexplore.net](http://timetoexplore.net) to learn more.
-They're all licensed under the BSD 3-Clause License, see the LICENSE file.
+They're all licensed under the BSD 3-Clause License. See the LICENSE file for details.
 
 ## img2fmem.py
 Image to FPGA memory map converter for use with **Verilog** $readmemh() etc.
