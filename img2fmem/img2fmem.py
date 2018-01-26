@@ -44,7 +44,7 @@ with open(base_name + '.mem', 'w') as f:
 
 def chunk(seq, size):  # Extract palette
     return [seq[i:i+size] for i in range(0, len(seq), size)]
-colours = [map(ord, bytes) for bytes in chunk(dest_img.palette.palette, 3)]
+colours = list([map(ord, bytes) for bytes in chunk(dest_img.palette.palette, 3)])
 
 # Generate hex palette output
 with open(base_name + '_palette.mem', 'w') as f:
