@@ -27,7 +27,7 @@ base_name = os.path.splitext(input_file)[0]
 pixels = source_img.load()
 for x in range(width):
     for y in range(height):
-        pixels[x, y] = tuple([p / 16 for p in pixels[x, y]])
+        pixels[x, y] = tuple([p // 16 for p in pixels[x, y]])
 
 # Convert to limited colour palette
 dest_img = source_img.convert('P', palette=Image.ADAPTIVE, colors=COLOURS)
@@ -62,6 +62,6 @@ with open(base_name + '_palette.mem', 'w') as f:
 prev_pixels = prev_img.load()
 for x in range(width):
     for y in range(height):
-        prev_pixels[x, y] = tuple([(p / 16) * 16 for p in prev_pixels[x, y]])
+        prev_pixels[x, y] = tuple([(p // 16) * 16 for p in prev_pixels[x, y]])
 prev_img = prev_img.convert('P', palette=Image.ADAPTIVE, colors=COLOURS)
 prev_img.save(base_name + '_preview.png')
