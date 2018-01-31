@@ -9,19 +9,26 @@ import os
 import sys
 from PIL import Image
 
-PALSIZE = 64  # palette size: use 64 for 6-bit palette
-
-if len(sys.argv) < 2:
-    print("Usage: image_file")
+if len(sys.argv) < 3:
+    print("Usage: image_file col_bits")
+    print("pixel colour bits: 4, 6, or 8")
     sys.exit()
 
 # load source image
 input_file = sys.argv[1]
+col_bits = int(sys.argv[2])
 source_img = Image.open(input_file)
 prev_img = source_img.copy()  # take a copy for later preview process
 
 base_name = os.path.splitext(input_file)[0]
 (width, height) = source_img.size
+
+if col_bits == 4:
+    PALSIZE = 16
+elif col_bits == 6:
+    PALSIZE = 64
+else:
+    PALSIZE = 256  # default to 8-bit
 
 # Reduce to 12-bit precision (4-bit per colour) in range 0-15
 pixels = source_img.load()
@@ -54,7 +61,7 @@ with open(base_name + '_palette.mem', 'w') as f:
         f.write("\n")
 
 # Convert preview image and save
-# 4-bit precision but we retain 0-255 range so image not too dark
+# 4-bit precision per pixel but we retain 0-255 range so image not too dark
 prev_pixels = prev_img.load()
 for x in range(width):
     for y in range(height):

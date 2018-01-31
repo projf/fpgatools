@@ -9,14 +9,18 @@ Written in Python using the [Pillow](https://pillow.readthedocs.io) package. Com
 
 ### Usage
 * To install Pillow: `pip install Pillow`
-* To use run: `python img2fmem.py <image_file>`
+* To use run: `python img2fmem.py image_file col_bits`
+
+* Input
+	- image_file: image file
+	- col_bits: number of colour bits per pixel: 4, 6, or 8
+* Output is three files (in same directory as source image):
+	- 4, 6, or 8-bit image in hex text format
+	- 12-bit palette in hex text format
+	- PNG preview of converted image
 
 ### Notes
-* Input is image in [any format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP etc.
-* Output is three files (in same directory as source image):
-  - 6-bit image in hex text format
-  - 12-bit palette in hex text format
-  - PNG preview of converted image
 * img2fmem does not resize images: use your image editor to do this
+* Image input is in [any format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP etc.
 
 Learn how to [initialize memory arrays in Verilog](https://timetoexplore.net/blog/initialize-memory-in-verilog).
