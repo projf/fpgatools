@@ -10,8 +10,9 @@ import sys
 from PIL import Image
 
 if len(sys.argv) < 3:
-    print("Usage: image_file col_bits")
-    print("pixel colour bits: 4, 6, or 8")
+    print("Usage: python img2fmem.py image_file col_bits")
+    print("    image_file: source image file name")
+    print("    col_bits: number of colour bits per pixel: 4, 6, or 8 (default)")
     sys.exit()
 
 # load source image
