@@ -17,7 +17,7 @@ Written in Python using the [Pillow](https://pillow.readthedocs.io) package. Com
 * Output is three files (in same directory as source image):
 	- 4, 6, or 8-bit image in hex text format
 	- 12-bit palette in hex text format
-	- PNG preview of converted image
+	- PNG preview of converted image, so you can see what it will look like
 
 ### Notes
 * img2fmem does not resize images: use your image editor to do this
