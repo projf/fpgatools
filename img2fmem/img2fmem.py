@@ -45,7 +45,7 @@ for x in range(width):
 
 # Convert to limited colour palette
 dest_img = source_img.convert('P', palette=Image.ADAPTIVE, colors=pal_size)
-dest_pal = dest_img.palette.palette;
+dest_pal = dest_img.palette.palette
 
 # Generate hex image output
 image_data = dest_img.getdata()
@@ -56,8 +56,8 @@ if output_format == 'mem':
         image_output += hex(d)[2:] + "\n"
 elif output_format == 'coe':
     image_output += "; " + MESSAGE
-    image_output += "memory_initialization_radix={:d};".format(colour_bits) + "\n"
-    image_output += "memory_initialization_vector=\n"
+    image_output += "memory_initialization_radix={:d};".format(colour_bits)
+    image_output += "\nmemory_initialization_vector=\n"
     for d in image_data:
         image_output += hex(d)[2:] + ",\n"
     # replace last comma with semicolon to complete coe statement
