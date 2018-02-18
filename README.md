@@ -3,7 +3,7 @@ Assorted tools for FPGA development. Visit [timetoexplore.net](http://timetoexpl
 They're all licensed under the BSD 3-Clause License. See the LICENSE file for details.
 
 ## img2fmem
-Image to FPGA memory map converter for use with **Verilog** `$readmemh()` or Xilinx core generator COE.
+Image to FPGA memory map converter for use with Verilog `$readmemh()` or Xilinx core generator COE.
 Output hex image uses 16, 64, or 256 colours from a palette of 4096.
 Written in Python using the [Pillow](https://pillow.readthedocs.io) package. Compatible with Python 3 and 2.
 
