@@ -31,9 +31,12 @@ For an image called `acme.tiff` that you want converted to 8-bit colour for use 
 
 	python img2fmem.py acme.tiff 6 coe
 
-### Notes
-* Source image is in [any format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP etc.
+### Supported Image Formats
+* Your source image needs to be in a [format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP are amongst the formats supported.
 * Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The file(1) command will tell you if you're using RGB or RGBA.
+* PNGs with transparency may fail with a message about not being iterable. Save your PNG without transparency and all should be well.
+
+### Notes
 * If the value of `colour_bits` isn't valid it defaults to `8`
 * img2fmem does not resize images: use your image editor to do this
 * The `game.png` graphic comes from [KenneyNL](https://opengameart.org/content/space-shooter-redux) and is public domain.
@@ -41,6 +44,7 @@ For an image called `acme.tiff` that you want converted to 8-bit colour for use 
 Learn how to [initialize memory arrays in Verilog](https://timetoexplore.net/blog/initialize-memory-in-verilog).
 
 ### Troubleshooting
+You should also read the supported image formats section, above.
 
 #### ImportError: No module named 'PIL'
 You need to install Pillow. Run the following:
