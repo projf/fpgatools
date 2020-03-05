@@ -1,7 +1,6 @@
 # FPGA Tools
 
-Assorted tools for FPGA development. Visit [timetoexplore.net](http://timetoexplore.net) to learn more.
-They're all licensed under the BSD 3-Clause License. See the LICENSE file for details.
+Tools for FPGA development. Licensed under the BSD 3-Clause License. See the LICENSE file for details.
 
 ## img2fmem
 
@@ -22,8 +21,8 @@ _NB. Xilinx COE format has undergone limited testing._
 Install Pillow using **one** of the following methods:
 
 * Debian/Ubuntu: `apt install python-pil`
-* Use `pip` or `pip3` to install package 'pillow'
-* Or follow [Pillow installation](https://pillow.readthedocs.io/en/stable/installation.html)
+* Use `pip` or `pip3` to install package `pillow`
+* Or follow [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html)
 
 ### Usage
 
@@ -51,7 +50,7 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 ### Supported Image Formats
 
 * Your source image needs to be in a [format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP are amongst the formats supported.
-* Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The file(1) command will tell you if you're using RGB or RGBA.
+* Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The `file(1)` command will tell you if you're using RGB or RGBA.
 * Images with transparency (such as PNGs) may fail with a message about not being iterable. Save your image without transparency and all should be well.
 
 The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io/en/stable/reference/ImagePalette.html). This script was written by looking at the Pillow source code, so isn't guaranteed to work with newer versions, but then again the palette code doesn't seem to have changed since 2001.
