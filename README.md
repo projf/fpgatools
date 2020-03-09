@@ -51,7 +51,7 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 
 * Your source image needs to be in a [format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP are amongst the formats supported.
 * Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The `file(1)` command will tell you if you're using RGB or RGBA.
-* Images with transparency (such as PNGs) may fail with a message about not being iterable. Save your image without transparency and all should be well.
+* Images with transparency (such as PNGs) may produce colour artifacts or fail with a message about not being iterable. Save your image without transparency and all should be well.
 
 The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io/en/stable/reference/ImagePalette.html). This script was written by looking at the Pillow source code, so isn't guaranteed to work with newer versions, but then again the palette code doesn't seem to have changed since 2001.
 
@@ -71,6 +71,22 @@ If you're having issues:
 * Check you're using a supported image format without transparency (see above)
 * Check the script is working correctly using using one of the included test images (e.g. photo.png)
 * Make sure you're using Python 3
+
+#### Colours Mixed Up
+
+The palette is of the form `0xRRGGBB` (24-bit) or `0xRGB` (12-bit). Red is stored in the most-significant byte or nibble, then green, then blue.
+
+For example, for a 12-bit palette value the following Verilog is correct:
+
+    assign red = palette[11:8];
+    assign green = palette[7:4];
+    assign blue = palette[3:0];
+
+If you're still having difficulties, try [simple.png](img2fmem/test/simple.png): it's a 64x64 image with simple, bright, colours.
+
+#### Anti-aliasing Artifacts on Resized Images
+
+When you resize and image in Gimp, Photoshop, etc. the default is to use a bicubic scaler. This works well for most images, but not for simple images with hard edges: for example, games sprites will look blurred. To preserve hard edges in your images use "nearest neighbour" scaling.
 
 #### ImportError: No module named 'PIL'
 
