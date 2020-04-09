@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # img2fmem.py - image to FPGA memory map converter 2020 edition
 # By Will Green - https://timetoexplore.net

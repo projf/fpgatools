@@ -21,7 +21,7 @@ _NB. Xilinx COE format has undergone limited testing._
 Install Pillow using **one** of the following methods:
 
 * Debian/Ubuntu: `apt install python3-pil`
-* Use `pip` or `pip3` to install package `pillow`
+* Use `pip3` to install package `pillow`
 * Or follow [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html)
 
 ### Usage
@@ -41,11 +41,11 @@ Install Pillow using **one** of the following methods:
 
 For an image called `acme.png` that you want converted to 4-bit colour with 12-bit palette for use with Verilog `$readmemh()`:
 
-    python img2fmem.py acme.png 4 mem 12
+    ./img2fmem.py acme.png 4 mem 12
 
 For an image called `acme.tiff` that you want converted to 8-bit colour with 24-bit palette for use with Xilinx core generator:
 
-    python img2fmem.py acme.tiff 6 coe 24
+    ./img2fmem.py acme.tiff 6 coe 24
 
 ### Supported Image Formats
 
