@@ -20,7 +20,7 @@ _NB. Xilinx COE format has undergone limited testing._
 
 Install Pillow using **one** of the following methods:
 
-* Debian/Ubuntu: `apt install python-pil`
+* Debian/Ubuntu: `apt install python3-pil`
 * Use `pip` or `pip3` to install package `pillow`
 * Or follow [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html)
 
