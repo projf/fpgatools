@@ -50,6 +50,7 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 ### Supported Image Formats
 
 * Your source image needs to be in a [format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP are amongst the formats supported.
+* Source images should be saved in a format with at least 256 colours (though they can use as few colours as they like in the image).
 * Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The `file(1)` command will tell you if you're using RGB or RGBA.
 * Images with transparency (such as PNGs) may produce colour artifacts or fail with a message about not being iterable. Save your image without transparency and all should be well.
 
@@ -57,12 +58,14 @@ The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io
 
 ### Usage Notes
 
+If you want the best quality colour conversion with few colours, use a package like GIMP or Photoshop to reduce the colours to 16 or 64 before using this tool. Just make sure the file format you save in has at least 256 colours.
+
 * If the value of `colour_bits` isn't valid it defaults to `8`
 * If the value of `palette_bits` isn't valid it defaults to `12`
 * img2fmem does not resize images: use your image editor to do this
 * The `game.png` graphic comes from [KenneyNL](https://opengameart.org/content/space-shooter-redux) and is in the public domain; other included images were created by the author.
 
-Learn how to [initialize memory arrays in Verilog](https://timetoexplore.net/blog/initialize-memory-in-verilog).
+Learn how to [initialize memory arrays in Verilog](https://projectf.io/posts/initialize-memory-in-verilog/).
 
 ### Troubleshooting
 
@@ -76,11 +79,13 @@ If you're having issues:
 
 The palette is of the form `0xRRGGBB` (24-bit) or `0xRGB` (12-bit). Red is stored in the most-significant byte or nibble, then green, then blue.
 
-For example, for a 12-bit palette value the following Verilog is correct:
+For example, for a 12-bit palette value the following SystemVerilog is correct:
 
-    assign red = palette[11:8];
-    assign green = palette[7:4];
-    assign blue = palette[3:0];
+    always_comb begin
+        red = palette[11:8];
+        green = palette[7:4];
+        blue = palette[3:0];
+    end
 
 If you're still having difficulties, try [simple.png](img2fmem/test/simple.png): it's a 64x64 image with simple, bright, colours.
 
