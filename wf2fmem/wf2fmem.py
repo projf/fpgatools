@@ -24,8 +24,37 @@ base_name = os.path.splitext(input_file)[0]
 # print("input_file: {}".format(input_file))
 # print("base_name:  {}".format(base_name))
 
+SC = 220  # scale factor for model vertices
+# SC = 55  # scale factor for model vertices
+X_OFFS = 0.0  # horizontal offset
+# X_OFFS = 2.0  # horizontal offset
+Y_OFFS = 0.0  # vertical offset
+
 verts = []
-faces = [] 
+faces = []
+
+def gen_lines(face):
+    x_coords = []
+    y_coords = []
+    for f in face:
+        x_coords.append(verts[f-1][0])
+        y_coords.append(verts[f-1][1])
+
+    x_coords = [int(SC*(c+X_OFFS)) for c in x_coords]
+    y_coords = [int(SC*(c+Y_OFFS)) for c in y_coords]
+
+    hc = []
+    for x,y in zip(x_coords, y_coords):
+        hc.append("{:02X}{:02X}".format(x,y))
+        # hc.append("{:03}{:03}".format(x,y))
+
+    print("{}{}".format(hc[0],hc[1]))
+    print("{}{}".format(hc[1],hc[2]))
+    if len(face) == 4:  # quad
+        print("{}{}".format(hc[2],hc[3]))
+        print("{}{}".format(hc[3],hc[0]))
+    else:  # triangle
+        print("{}{}".format(hc[2],hc[0]))
 
 with open(input_file, 'r') as obj_f:
     for line in obj_f:
@@ -46,32 +75,9 @@ print("There are {} vertices.".format(len(verts)))
 print("There are {} faces.".format(len(faces)))
 
 for f in faces:
-    if len(f) == 3:  # triangle
-        print("triangle: ", end='')
-        print("{}->{} ".format(f[0], f[1]), end='')
-        print("{}->{} ".format(f[1], f[2]), end='')
-        print("{}->{}".format(f[2], f[0]))
-        (x0,y0) = verts[f[0]-1][0:2]
-        (x1,y1) = verts[f[1]-1][0:2]
-        (x2,y2) = verts[f[2]-1][0:2]
-        print("({},{})".format(x0,y0))
-        print("({},{})".format(x1,y1))
-        print("({},{})".format(x2,y2))
-    if len(f) == 4:  # quad
-        print("quad: ", end='')
-        print("{}->{} ".format(f[0], f[1]), end='')
-        print("{}->{} ".format(f[1], f[2]), end='')
-        print("{}->{} ".format(f[2], f[3]), end='')
-        print("{}->{}".format(f[3], f[0]))
-        (x0,y0) = verts[f[0]-1][0:2]
-        (x1,y1) = verts[f[1]-1][0:2]
-        (x2,y2) = verts[f[2]-1][0:2]
-        (x3,y3) = verts[f[3]-1][0:2]
-        print("({},{})".format(x0,y0))
-        print("({},{})".format(x1,y1))
-        print("({},{})".format(x2,y2))
-        print("({},{})".format(x3,y3))
+    gen_lines(f)
 
+# # Used to determine scale if we don't know it
 # max_x = max(verts, key=operator.itemgetter(0))
 # max_y = max(verts, key=operator.itemgetter(1))
 # min_x = min(verts, key=operator.itemgetter(0))
