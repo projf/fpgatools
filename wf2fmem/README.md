@@ -1,7 +1,13 @@
-# Wavefront Object to FPGA Memory File
+# wf2fmem
 
 Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`.
-Written in Python 3.
+Handles triangular and quad faces. Written in Python 3.
+
+Example projects using this tool:
+
+* [Project F Shapes & Simple 3D](https://projectf.io/posts/shapes-3d/)
+
+Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Usage
 
@@ -9,9 +15,9 @@ Written in Python 3.
 wf2fmem.py model_file size offset
 ```
 
-* model_file: source model file name
-* size: size in pixels of output (minimum 16)
-* offset: offset from screen edge in pixels of output
+* `model_file`: source model file name
+* `size`: maximum size in pixels for output (minimum 16)
+* `offset`: offset from screen edge in pixels for output
 
 Example:
 
@@ -25,10 +31,10 @@ For advice on working with Verilog .mem files, see [Initialize Memory in Verilog
 
 ## Test Data
 
-* [cube](test/cube.obj) - a hand-crafted cube created by the author (6 faces and 8 vertices)
-* [icosphere](test/icosphere.obj) - icosphere exported from [Blender](https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html)
-* [monkey](test/monkey.obj) - Monkey exported from [Blender](https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html)
-* [teapot](test/teapot.obj) - Utah Teapot from [University of Utah](https://www.cs.utah.edu/~natevm/newell_teaset/newell_teaset.zip)
+* [cube](test/cube.obj) - a hand-crafted cube created by the author (8 vertices and 6 faces)
+* [icosphere](test/icosphere.obj) - icosphere exported from [Blender](https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html) (42 vertices and 80 faces)
+* [monkey](test/monkey.obj) - Monkey exported from [Blender](https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html) (507 vertices and 500 faces)
+* [teapot](test/teapot.obj) - Utah Teapot from [University of Utah](https://www.cs.utah.edu/~natevm/newell_teaset/newell_teaset.zip) (3241 vertices and 3464 faces)
 
 ## References
 

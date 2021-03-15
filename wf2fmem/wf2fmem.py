@@ -2,10 +2,8 @@
 
 # wf2fmem.py - Wavefront .obj to FPGA memory init converter
 # By Will Green - https://projectf.io
-# Copyright (c) 2021, Will Green, Licensed under BSD 3-Clause License
+# (C)2021 Will Green, open source software released under the MIT License
 # For latest version and docs visit https://github.com/projf/fpgatools
-
-# NB. This is an early version in development
 
 import operator
 import os
@@ -87,8 +85,8 @@ with open(input_file, 'r') as obj_f:
                     fv.append(int(v.partition('/')[0]))
                 faces.append(fv)
 
-# print("There are {} vertices.".format(len(verts)))
-# print("There are {} faces.".format(len(faces)))
+print("There are {} vertices.".format(len(verts)))
+print("There are {} faces.".format(len(faces)))
 
 # determine scale factor and offsets
 min_x = min(verts, key=operator.itemgetter(0))
@@ -105,5 +103,5 @@ sf = size / max_c
 # print("Max c={}".format(max_c))
 # print("Scale Factor: {}".format(sf))
 
-for f in faces:
-    gen_lines(f, sf, min_x[0], min_y[1], min_z[2])
+# for f in faces:
+#     gen_lines(f, sf, min_x[0], min_y[1], min_z[2])
