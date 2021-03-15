@@ -11,52 +11,41 @@ import operator
 import os
 import sys
 
-if (len(sys.argv) != 2):
+if (len(sys.argv) != 4):
     print("Convert Wavefront .obj files to FPGA memory init files in $readmemh format.")
-    print("usage: wf2fmem.py model_file")
+    print("usage: wf2fmem.py model_file size offset")
     print("         model_file: source model file name")
-    print("\nExample: wf2fmem.py teapot.obj")
+    print("         size:       size in pixels (minimum 16)")
+    print("         offset:     offset from screen edge in pixels")
+    print("\nExample: wf2fmem.py icosphere.obj 220 8")
     sys.exit()
 
 input_file = sys.argv[1]
 base_name = os.path.splitext(input_file)[0]
 
+size = int(sys.argv[2])
+offs = int(sys.argv[3])
+if (size < 16):
+    print("Size must be 16 pixels or greater")
+    sys.exit()
+
+# We'll generate an output file in a later version (instead of using stdout)
 # print("input_file: {}".format(input_file))
 # print("base_name:  {}".format(base_name))
 
-## these parameters should be calculated automatically
-
-# cube
-SC = 220  # scale factor for model vertices
-D_OFFS = 10   # draw offset (pixels to add to all dimensions)
-X_OFFS = 0.0  # X offset
-Y_OFFS = 0.0  # Y offset
-Z_OFFS = 0.0  # Z offset
-
-# # teapot
-# SC = 32  # scale factor for model vertices
-# D_OFFS = 10   # draw offset (pixels to add to all dimensions)
-# X_OFFS = 2.0  # X offset
-# Y_OFFS = 0.0  # Y offset
-# Z_OFFS = 3.434  # Z offset
-
-# # monkey
-# SC = 88  # scale factor for model vertices
-# D_OFFS = 10   # draw offset (pixels to add to all dimensions)
-# X_OFFS = 1.367188  # X offset
-# Y_OFFS = 0.984375  # Y offset
-# Z_OFFS = 0.851562  # Z offset
-
+# list of vertices and faces
 verts = []
 faces = []
 
+# format lines in the same direction
 def fmt_line(c0, c1):
     if (c1 > c0):
         return "{}{}".format(c0,c1)
     else:
         return "{}{}".format(c1,c0)
 
-def gen_lines(face):
+# generate lines from faces
+def gen_lines(face, sf, min_x, min_y, min_z):
     x_coords = []
     y_coords = []
     z_coords = []
@@ -65,9 +54,9 @@ def gen_lines(face):
         y_coords.append(verts[f-1][1])
         z_coords.append(verts[f-1][2])
 
-    x_coords = [int(SC*(c+X_OFFS)) + D_OFFS for c in x_coords]
-    y_coords = [int(SC*(c+Y_OFFS)) + D_OFFS for c in y_coords]
-    z_coords = [int(SC*(c+Z_OFFS)) + D_OFFS for c in z_coords]
+    x_coords = [int(sf*(cx-min_x)) + offs for cx in x_coords]
+    y_coords = [int(sf*(cy-min_y)) + offs for cy in y_coords]
+    z_coords = [int(sf*(cz-min_z)) + offs for cz in z_coords]
 
     hc = []  # hex coordinates
     for x,y,z in zip(x_coords, y_coords, z_coords):
@@ -82,6 +71,7 @@ def gen_lines(face):
     else:  # triangle
         print(fmt_line(hc[2],hc[0]))
 
+# read OBJ file; add vertices and faces to lists
 with open(input_file, 'r') as obj_f:
     for line in obj_f:
         tok = line.split()
@@ -97,18 +87,23 @@ with open(input_file, 'r') as obj_f:
                     fv.append(int(v.partition('/')[0]))
                 faces.append(fv)
 
-for f in faces:
-    gen_lines(f)
-
 # print("There are {} vertices.".format(len(verts)))
 # print("There are {} faces.".format(len(faces)))
 
-# # Used to determine scale if we don't know it
-# max_x = max(verts, key=operator.itemgetter(0))
-# max_y = max(verts, key=operator.itemgetter(1))
-# max_z = max(verts, key=operator.itemgetter(2))
-# min_x = min(verts, key=operator.itemgetter(0))
-# min_y = min(verts, key=operator.itemgetter(1))
-# min_z = min(verts, key=operator.itemgetter(2))
-# print("Max x={}, y={}, z={} ".format(max_x[0], max_y[1], max_z[2]))
+# determine scale factor and offsets
+min_x = min(verts, key=operator.itemgetter(0))
+min_y = min(verts, key=operator.itemgetter(1))
+min_z = min(verts, key=operator.itemgetter(2))
+max_x = max(verts, key=operator.itemgetter(0))
+max_y = max(verts, key=operator.itemgetter(1))
+max_z = max(verts, key=operator.itemgetter(2))
+max_c = max([max_x[0]-min_x[0], max_y[1]-min_y[1], max_z[2]-min_z[2]])
+sf = size / max_c
+
 # print("Min x={}, y={}, z={} ".format(min_x[0], min_y[1], min_z[2]))
+# print("Max x={}, y={}, z={} ".format(max_x[0], max_y[1], max_z[2]))
+# print("Max c={}".format(max_c))
+# print("Scale Factor: {}".format(sf))
+
+for f in faces:
+    gen_lines(f, sf, min_x[0], min_y[1], min_z[2])
