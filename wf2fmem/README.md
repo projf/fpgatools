@@ -1,6 +1,7 @@
 # wf2fmem
 
 Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`.
+
 Handles triangular and quad faces. Written in Python 3.
 
 Example projects using this tool:
@@ -29,7 +30,7 @@ Converts the icosphere model file with a maximum pixel dimensions of 220 and an 
 
 For advice on working with Verilog .mem files, see [Initialize Memory in Verilog](https://projectf.io/posts/initialize-memory-in-verilog/).
 
-## Test Data
+## Test Models
 
 * [cube](test/cube.obj) - a hand-crafted cube created by the author (8 vertices and 6 faces)
 * [icosphere](test/icosphere.obj) - icosphere exported from [Blender](https://docs.blender.org/manual/en/latest/modeling/meshes/primitives.html) (42 vertices and 80 faces)
