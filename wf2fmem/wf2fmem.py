@@ -13,8 +13,9 @@ if (len(sys.argv) != 4):
     print("Convert Wavefront .obj files to FPGA memory init files in $readmemh format.")
     print("usage: wf2fmem.py model_file size offset")
     print("         model_file: source model file name")
-    print("         size:       size in pixels (minimum 16)")
+    print("         size:       size in pixels (16-255)")
     print("         offset:     offset from screen edge in pixels")
+    print("                     size+offset must 255 or less")
     print("\nExample: wf2fmem.py icosphere.obj 220 8")
     sys.exit()
 
@@ -23,8 +24,11 @@ base_name = os.path.splitext(input_file)[0]
 
 size = int(sys.argv[2])
 offs = int(sys.argv[3])
-if (size < 16):
-    print("Size must be 16 pixels or greater")
+if (size < 16 or size > 255):
+    print("Size must be 16-255 pixels")
+    sys.exit()
+if (size+offs > 255):
+    print("size + offset must 255 or less")
     sys.exit()
 
 # We'll generate an output file in a later version (instead of using stdout)
@@ -85,8 +89,8 @@ with open(input_file, 'r') as obj_f:
                     fv.append(int(v.partition('/')[0]))
                 faces.append(fv)
 
-print("There are {} vertices.".format(len(verts)))
-print("There are {} faces.".format(len(faces)))
+# print("There are {} vertices.".format(len(verts)))
+# print("There are {} faces.".format(len(faces)))
 
 # determine scale factor and offsets
 min_x = min(verts, key=operator.itemgetter(0))
@@ -103,5 +107,5 @@ sf = size / max_c
 # print("Max c={}".format(max_c))
 # print("Scale Factor: {}".format(sf))
 
-# for f in faces:
-#     gen_lines(f, sf, min_x[0], min_y[1], min_z[2])
+for f in faces:
+    gen_lines(f, sf, min_x[0], min_y[1], min_z[2])

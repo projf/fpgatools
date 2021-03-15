@@ -2,13 +2,30 @@
 
 Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`.
 
-Handles triangular and quad faces. Written in Python 3.
+Turns triangular and quad faces into 8-bit line coordinates suitable for simple 3D drawing with an FPGA.
+Written in Python 3.
 
 Example projects using this tool:
 
 * [Project F Shapes & Simple 3D](https://projectf.io/posts/shapes-3d/)
 
 Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
+
+## Output MEM Format
+
+The output consist of a 48-bit hex string per model line, for example `41D39782D3AC`.
+
+You can turn this into 8-bit coordinates like this:
+
+```verilog
+{x0,y0,z0,x1,y1,z1} <= data;
+```
+
+The output will contain duplicates, as most lines are part of more than one face. You can fix this with the UN*X `sort` and `uniq` commands. For example:
+
+```bash
+wf2fmem.py test/icosphere.obj 220 8 | sort | uniq > test/icosphere.mem
+```
 
 ## Usage
 
@@ -17,8 +34,8 @@ wf2fmem.py model_file size offset
 ```
 
 * `model_file`: source model file name
-* `size`: maximum size in pixels for output (minimum 16)
-* `offset`: offset from screen edge in pixels for output
+* `size`: maximum size in pixels for output (16-255)
+* `offset`: offset from screen edge in pixels for output. size+offset must 255 or less.
 
 Example:
 
