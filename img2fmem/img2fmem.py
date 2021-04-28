@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # img2fmem.py - image to FPGA memory map converter 2020 edition
-# By Will Green - https://projectf.io
 # (C)2021 Will Green, open source software released under the MIT License
 # For latest version and docs visit https://github.com/projf/fpgatools
 

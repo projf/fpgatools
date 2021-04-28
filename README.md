@@ -10,11 +10,18 @@ Image to FPGA memory map converter for use with Verilog `$readmemh()` or Xilinx 
 Output hex image uses 16, 64, or 256 colours from a 12 or 24-bit palette.
 Written in Python 3 using the [Pillow](https://pillow.readthedocs.io) package.
 
-More details, including usage instructions, in the [img2fmem README](img2fmem/).
+For usage instructions see the [img2fmem README](img2fmem/).
+
+## sine2fmem
+
+Generate a table of sine values between 0-90° (0 - π/2 radians) suitable for
+loading into memory with Verilog `$readmemh()`.
+
+For usage instructions see the [sine2fmem README](sine2fmem/).
 
 ## wf2fmem
 
 Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`.
 Handles triangular and quad faces. Written in Python 3.
 
-More details, including usage instructions, in the [wf2fmem README](wf2fmem/).
+For usage instructions see the [wf2fmem README](wf2fmem/).

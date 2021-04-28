@@ -31,10 +31,10 @@ Install Pillow using **one** of the following methods:
 
 * To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
 * Input Arguments
-  * `image_file`: source image file name (see below for supported formats)
-  * `colour_bits`: number of colour bits per pixel: 4, 6, or 8
-  * `output_format`: `mem` or `coe`
-  * `palette_bits`: number of palette bits: 12 (default) or 24
+  * `image_file` - source image file name (see below for supported formats)
+  * `colour_bits` - number of colour bits per pixel: 4, 6, or 8
+  * `output_format` - `mem` or `coe`
+  * `palette_bits` - number of palette bits: 12 (default) or 24
 * Output is three files (in same directory as source image):
   * 4, 6, or 8-bit image in hex text format
   * 12 or 24 bit palette in hex text format

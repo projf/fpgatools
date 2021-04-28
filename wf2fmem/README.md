@@ -16,9 +16,9 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 wf2fmem.py model_file size offset
 ```
 
-* `model_file`: source model file name
-* `size`: maximum size in pixels for output (16-255)
-* `offset`: offset from screen edge in pixels for output. size+offset must 255 or less.
+* `model_file` - source model file name
+* `size` - maximum size in pixels for output (16-255)
+* `offset` - offset from screen edge in pixels for output. size+offset must be 255 or less.
 
 Example:
 

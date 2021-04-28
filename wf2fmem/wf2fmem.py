@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # wf2fmem.py - Wavefront .obj to FPGA memory init converter
-# By Will Green - https://projectf.io
 # (C)2021 Will Green, open source software released under the MIT License
 # For latest version and docs visit https://github.com/projf/fpgatools
 
