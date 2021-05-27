@@ -1,12 +1,12 @@
 # wf2fmem
 
-Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`. Written in Python 3.
+Wavefront .obj (3D model) to FPGA memory init file converter for use with Verilog `$readmemh()`. Written in Python 3.
 
 Turns triangular and quad faces into 8-bit line coordinates suitable for simple 3D drawing with an FPGA.
 
 Example projects using this tool:
 
-* [Project F Shapes & Simple 3D](https://projectf.io/posts/shapes-3d/)
+* Simple 3D - coming soon to Project F blog.
 
 Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 

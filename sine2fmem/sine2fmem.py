@@ -7,13 +7,12 @@
 from math import ceil, sin, pi
 import sys
 
-# math.sin works in radians
-# 0-90° == π/2 radians
+# math.sin works in radians: 0-90° == π/2 radians
 
 if (len(sys.argv) > 1):
-    steps = int(sys.argv[1])
+    rows = int(sys.argv[1])
 else:
-    steps = 256
+    rows = 256
 
 if (len(sys.argv) > 2):
     width = int(sys.argv[2])
@@ -26,8 +25,10 @@ print("// Learn more at https://github.com/projf/fpgatools")
 fmt_width = str(ceil(width/4))  # four bits per hex digit
 fmt_string = "{:0" + fmt_width + "X}  // {:03}: sin({:.4f}) = {:.4f}"
 
-for i in range(steps):
-    val = (pi/(2*steps)) * i
+for i in range(rows):
+    val = (pi/(2*rows)) * i
     res = sin(val)
-    res_scaled = round((2**width-1) * res)
+    res_scaled = round((2**width) * res)
+    if res_scaled == 2**width:  # maximum value uses too many bits
+        res_scaled -= 1;        # accompanying Verilog module handles this
     print(fmt_string.format(res_scaled, i, val, res))

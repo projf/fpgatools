@@ -1,6 +1,6 @@
 # FPGA Tools
 
-Tools for FPGA development by [Project F](https://projectf.io/).
+Handy Python tools for FPGA development by [Project F](https://projectf.io/). For our Verilog designs see [projf-explore](https://github.com/projf/projf-explore).
 
 Licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
@@ -10,7 +10,9 @@ Image to FPGA memory map converter for use with Verilog `$readmemh()` or Xilinx 
 Output hex image uses 16, 64, or 256 colours from a 12 or 24-bit palette.
 Written in Python 3 using the [Pillow](https://pillow.readthedocs.io) package.
 
-For usage instructions see the [img2fmem README](img2fmem/).
+Your source image needs to be in a format Pillow supports: PNG, JPEG, TIFF, BMP are amongst the formats supported.
+
+For full usage instructions see the [img2fmem README](img2fmem/).
 
 ## sine2fmem
 
@@ -21,7 +23,7 @@ For usage instructions see the [sine2fmem README](sine2fmem/).
 
 ## wf2fmem
 
-Wavefront .obj to FPGA memory init file converter for use with Verilog `$readmemh()`.
+Wavefront .obj (3D model) to FPGA memory init file converter for use with Verilog `$readmemh()`.
 Handles triangular and quad faces. Written in Python 3.
 
 For usage instructions see the [wf2fmem README](wf2fmem/).
