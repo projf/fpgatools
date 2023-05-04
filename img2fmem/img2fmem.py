@@ -8,6 +8,34 @@ import os
 import sys
 from PIL import Image
 
+def convert_to_mif(colour_bits, image_data):
+    """Converts the image data into mif format.
+
+    Args:
+        colour_bits (int): Number of bits per pixel in image. 
+        image_data (:obj:`list` of :obj:`int`): List of values per pixel in image.
+    
+    Returns:
+        str: Formatted string of mif file format contents.
+
+    """
+
+    image_output = str()
+
+    image_output += "WIDTH = " + str(colour_bits) + ";\n"
+    image_output += "DEPTH = " + str(len(image_data)) + ";\n"
+    image_output += "ADDRESS_RADIX = DEC;\n"
+    image_output += "DATA_RADIX = HEX;\n"
+    image_output += "CONTENT BEGIN\n\n"
+
+    num = 0
+    for d in image_data:
+        image_output += str(num) + "  : " + str(d) + ";\n"
+        num += 1
+    image_output += "\nEND;"
+
+    return image_output
+
 if (len(sys.argv) != 4 and len(sys.argv) != 5):
     print("Convert image files to FPGA memory maps in $readmemh or Xilinx COE format.")
     print("usage: img2fmem.py image_file colour_bits output_format palette_bits")
@@ -63,6 +91,8 @@ if output_format == 'mem':
     image_output += "// " + MESSAGE
     for d in image_data:
         image_output += "{:02X}\n".format(d)
+elif output_format == 'mif':
+    image_output = convert_to_mif(colour_bits, image_data)
 elif output_format == 'coe':
     image_output += "; " + MESSAGE
     image_output += "memory_initialization_radix={:d};\n".format(colour_bits)
@@ -84,7 +114,7 @@ colours = [bytearray(dest_pal[i:i+3]) for i in range(0, len(dest_pal), 3)]
 
 # Generate hex palette output
 palette_output = ''
-if output_format == 'mem':
+if output_format == 'mem' or output_format == 'mif':
     palette_output += "// " + MESSAGE
     for i in range(pal_size):
         if (palette_bits == 24):
@@ -110,6 +140,9 @@ elif output_format == 'coe':
 else:
     print("Error: output_format should be mem or coe.")
     sys.exit()
+
+if output_format == 'mif':
+    output_format = 'mem'
 
 with open(base_name + '_palette.' + output_format, 'w') as f:
     f.write(palette_output)
