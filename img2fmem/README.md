@@ -78,8 +78,6 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 * Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The `file(1)` command will tell you if you're using RGB or RGBA.
 * Images with transparency (such as PNGs) may produce colour artifacts or fail with a message about not being iterable. Save your image without transparency and all should be well.
 
-The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io/en/stable/reference/ImagePalette.html). This script was written by looking at the Pillow source code, so isn't guaranteed to work with newer versions, but then again the palette code doesn't seem to have changed since 2001.
-
 ## Usage Notes
 
 * If the value of `colour_bits` isn't valid it defaults to `8`
