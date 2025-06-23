@@ -13,6 +13,12 @@ Example projects using this tool:
 
 Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
+## Changes in 2025 Version
+
+* Use palette API rather than hacking low-level data structure, which no longer works in recent Pillow
+* Generate more compact output for 16 colour images
+* Use new-style format string f"{foo:02X}"
+
 ## Changes in 2020 Version
 
 * Adds support for 24-bit palettes (16.7 million colours), but retains a default of 12-bit palettes (4,096 colours).
@@ -21,13 +27,22 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Install Pillow
 
-Install Pillow using **one** of the following methods:
+I recommend installing Pillow using pip within a Python venv; for example:
 
-* Debian/Ubuntu: `apt install python3-pil`
-* Use `pip3` to install package `pillow`
-* Or follow [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html)
+```shell
+cd fpgatools
+python3 -m venv fpgatools-venv
+source ./fpgatools-venv/bin/activate
+pip install pillow
+```
+
+After this initial install, you need to remember to source the environment before running img2fmem.py with `source ./fpgatools-venv/bin/activate`. 
+
+See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html) instructions for more information.
 
 ## Usage
+
+_Don't forget to source the Python venv if you installed Pillow that way (see above)._
 
 * To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
 * Input Arguments

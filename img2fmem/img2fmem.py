@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-# img2fmem.py - image to FPGA memory map converter 2020 edition
-# (C)2021 Will Green, open source software released under the MIT License
+# img2fmem.py - image to FPGA memory map converter 2025 edition
+# (C)2025 Will Green, open source software released under the MIT License
 # For latest version and docs visit https://github.com/projf/fpgatools
+
+"""Image to FPGA memory map converter"""
 
 import os
 import sys
@@ -37,24 +39,16 @@ output_format = sys.argv[3]
 palette_bits = 12       # default to 12 bit output (4 bits per colour) - as in 2018 version
 if len(sys.argv) == 5:
     palette_bits = int(sys.argv[4])
-    if palette_bits != 24:  # 24 bit output (8 bits per colour) 
+    if palette_bits != 24:  # 24 bit output (8 bits per colour)
         palette_bits = 12   # 12 bit output (4 bits per colour)
 
 # load source image
 source_img = Image.open(input_file)
-prev_img = source_img.copy()  # take a copy for later preview process
-(width, height) = source_img.size
-pixels = source_img.load()
-
-# Reduce to 12-bit precision (4-bit per colour) in range 0-15 if required
-if (palette_bits == 12): 
-    for x in range(width):
-        for y in range(height):
-            pixels[x, y] = tuple([p // 16 for p in pixels[x, y]])
+(width, height) = source_img.size  # used for formatting output
 
 # Convert to limited colour palette
-dest_img = source_img.convert('P', palette=Image.ADAPTIVE, colors=pal_size)
-dest_pal = dest_img.palette.palette
+dest_img = source_img.quantize(colors=pal_size, method=Image.Quantize.MEDIANCUT)
+dest_pal = dest_img.getpalette()
 
 # Generate hex image output
 image_data = dest_img.getdata()
@@ -62,13 +56,20 @@ image_output = ''
 if output_format == 'mem':
     image_output += "// " + MESSAGE
     for d in image_data:
-        image_output += "{:02X}\n".format(d)
+        if pal_size == 16:  # only one hex digit needed
+            image_output += f"{d:01X}\n"
+        else:
+            image_output += f"{d:02X}\n"
 elif output_format == 'coe':
     image_output += "; " + MESSAGE
-    image_output += "memory_initialization_radix={:d};\n".format(colour_bits)
+    image_output += f"memory_initialization_radix={colour_bits};\n"
     image_output += "memory_initialization_vector=\n"
     for d in image_data:
-        image_output += "{:02X},\n".format(d)
+        if pal_size == 16:
+            image_output += f"{d:01X},\n"
+        else:
+            image_output += f"{d:02X},\n"
+
     # replace last comma with semicolon to complete coe statement
     image_output = image_output[:-2]
     image_output += ";\n"
@@ -76,34 +77,38 @@ else:
     print("Error: output_format should be mem or coe.")
     sys.exit()
 
-with open(base_name + '.' + output_format, 'w') as f:
+with open(base_name + '.' + output_format, 'w', encoding="utf-8") as f:
     f.write(image_output)
-
-# Chunk raw palette into three byte sections (RGB)
-colours = [bytearray(dest_pal[i:i+3]) for i in range(0, len(dest_pal), 3)]
 
 # Generate hex palette output
 palette_output = ''
 if output_format == 'mem':
     palette_output += "// " + MESSAGE
-    for i in range(pal_size):
-        if (palette_bits == 24):
-            pal_entry = colours[i][0] * 2**16 + colours[i][1] * 2**8 + colours[i][2]
-            palette_output += "{:06X}\n".format(pal_entry)
-        else:
-            pal_entry = colours[i][0] * 2**8 + colours[i][1] * 2**4 + colours[i][2]
-            palette_output += "{:03X}\n".format(pal_entry)
+    for i in range(0, len(dest_pal), 3):
+        r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
+        if palette_bits == 12:
+            r = r >> 4
+            g = g >> 4
+            b = b >> 4
+            palette_output += f"{r:01X}{g:01X}{b:01X} "
+        else:  # 24-bit
+            palette_output += f"{r:02X}{g:02X}{b:02X} "
+    # replace last space with newline
+    palette_output = palette_output[:-1]
+    palette_output += "\n"
 elif output_format == 'coe':
     palette_output += "; " + MESSAGE
-    palette_output += "memory_initialization_radix={:d};\n".format(palette_bits)
-    palette_output += "memory_initialization_vector=\n"
-    for i in range(pal_size):
-        if (palette_bits == 24):
-            pal_entry = colours[i][0] * 2**16 + colours[i][1] * 2**8 + colours[i][2]
-            palette_output += "{:06X},\n".format(pal_entry)
-        else:
-            pal_entry = colours[i][0] * 2**8 + colours[i][1] * 2**4 + colours[i][2]
-            palette_output += "{:03X},\n".format(pal_entry)
+    palette_output += f"memory_initialization_radix={palette_bits};\n"
+    palette_output += "memory_initialization_vector="
+    for i in range(0, len(dest_pal), 3):
+        r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
+        if palette_bits == 12:
+            r = r >> 4
+            g = g >> 4
+            b = b >> 4
+            palette_output += f"{r:01X}{g:01X}{b:01X}, "
+        else:  # 24-bit
+            palette_output += f"{r:02X}{g:02X}{b:02X}, "
     # replace last comma with semicolon to complete coe statement
     palette_output = palette_output[:-2]
     palette_output += ";\n"
@@ -111,15 +116,8 @@ else:
     print("Error: output_format should be mem or coe.")
     sys.exit()
 
-with open(base_name + '_palette.' + output_format, 'w') as f:
+with open(base_name + '_palette.' + output_format, 'w', encoding="utf-8") as f:
     f.write(palette_output)
 
-# Convert preview image and save
-# If using 12-bit palette retain full 0-255 range so preview image is not too dark
-prev_pixels = prev_img.load()
-if (palette_bits == 12): 
-    for x in range(width):
-        for y in range(height):
-            prev_pixels[x, y] = tuple([(p // 16) * 16 for p in prev_pixels[x, y]])
-prev_img = prev_img.convert('P', palette=Image.ADAPTIVE, colors=pal_size)
-prev_img.save(base_name + '_preview.png')
+# Save preview image and save
+dest_img.save(base_name + '_preview.png')
