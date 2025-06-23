@@ -38,7 +38,11 @@ source ./fpgatools-venv/bin/activate
 pip install pillow
 ```
 
-After this initial install, you need to remember to source the environment before running img2fmem.py with `source ./fpgatools-venv/bin/activate`. 
+After this initial install, you need to remember to source the environment before running img2fmem.py with:
+
+```shell
+source ./fpgatools-venv/bin/activate
+```
 
 See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html) instructions for more information.
 
