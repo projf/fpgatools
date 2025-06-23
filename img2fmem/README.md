@@ -13,6 +13,14 @@ Example projects using this tool:
 
 Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
+## Changes in 2025 Version
+
+* Use palette API rather than hacking low-level data structure (hacking no longer works in newer Pillow anyway)
+* Format image output in lines to match original image for more manageable files
+* Generate more compact output for 16-colour output (one hex value)
+* Always set `memory_initialization_radix` to 16 (it's hex format)
+* Use new-style Python format string `f"{foo:02X}"`
+
 ## Changes in 2020 Version
 
 * Adds support for 24-bit palettes (16.7 million colours), but retains a default of 12-bit palettes (4,096 colours).
@@ -21,13 +29,26 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Install Pillow
 
-Install Pillow using **one** of the following methods:
+I recommend installing Pillow using pip within a Python venv; for example:
 
-* Debian/Ubuntu: `apt install python3-pil`
-* Use `pip3` to install package `pillow`
-* Or follow [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html)
+```shell
+cd fpgatools
+python3 -m venv fpgatools-venv
+source ./fpgatools-venv/bin/activate
+pip install pillow
+```
+
+After this initial install, you need to remember to source the environment before running img2fmem.py with:
+
+```shell
+source ./fpgatools-venv/bin/activate
+```
+
+See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html) instructions for more information.
 
 ## Usage
+
+_Don't forget to source the Python venv if you installed Pillow that way (see above)._
 
 * To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
 * Input Arguments
@@ -57,11 +78,7 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 * Source images must be RGB rather than RGBA format. If you use RGBA then you'll probably end up with a screen of one solid colour. The `file(1)` command will tell you if you're using RGB or RGBA.
 * Images with transparency (such as PNGs) may produce colour artifacts or fail with a message about not being iterable. Save your image without transparency and all should be well.
 
-The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io/en/stable/reference/ImagePalette.html). This script was written by looking at the Pillow source code, so isn't guaranteed to work with newer versions, but then again the palette code doesn't seem to have changed since 2001.
-
 ## Usage Notes
-
-If you want the best quality colour conversion with few colours, use a package like GIMP or Photoshop to reduce the colours to 16 or 64 before using this tool. Just make sure the file format you save in has at least 256 colours.
 
 * If the value of `colour_bits` isn't valid it defaults to `8`
 * If the value of `palette_bits` isn't valid it defaults to `12`
@@ -82,13 +99,15 @@ If you're having issues:
 
 The palette is of the form `0xRRGGBB` (24-bit) or `0xRGB` (12-bit). Red is stored in the most-significant byte or nibble, then green, then blue.
 
-For example, for a 12-bit palette value the following SystemVerilog is correct:
+For example, for a 12-bit palette value use the following Verilog:
 
-    always_comb begin
-        red = palette[11:8];
-        green = palette[7:4];
-        blue = palette[3:0];
-    end
+```verilog
+always @(*) begin
+    red = palette[11:8];
+    green = palette[7:4];
+    blue = palette[3:0];
+end
+```
 
 If you're still having difficulties, try [simple.png](img2fmem/test/simple.png): it's a 64x64 image with simple, bright, colours.
 
