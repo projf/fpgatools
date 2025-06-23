@@ -82,8 +82,6 @@ The [ImagePalette interface isn't well documented](https://pillow.readthedocs.io
 
 ## Usage Notes
 
-If you want the best quality colour conversion with few colours, use a package like GIMP or Photoshop to reduce the colours to 16 or 64 before using this tool. Just make sure the file format you save in has at least 256 colours.
-
 * If the value of `colour_bits` isn't valid it defaults to `8`
 * If the value of `palette_bits` isn't valid it defaults to `12`
 * img2fmem does not resize images: use your image editor to do this
