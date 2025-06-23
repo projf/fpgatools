@@ -99,13 +99,15 @@ If you're having issues:
 
 The palette is of the form `0xRRGGBB` (24-bit) or `0xRGB` (12-bit). Red is stored in the most-significant byte or nibble, then green, then blue.
 
-For example, for a 12-bit palette value the following SystemVerilog is correct:
+For example, for a 12-bit palette value use the following Verilog:
 
-    always_comb begin
-        red = palette[11:8];
-        green = palette[7:4];
-        blue = palette[3:0];
-    end
+```verilog
+always @(*) begin
+    red = palette[11:8];
+    green = palette[7:4];
+    blue = palette[3:0];
+end
+```
 
 If you're still having difficulties, try [simple.png](img2fmem/test/simple.png): it's a 64x64 image with simple, bright, colours.
 
