@@ -19,7 +19,7 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 * Format image output in lines to match original image
 * Generate more compact output for 16 colour images
 * Always set `memory_initialization_radix` to 16 (it's hex format)
-* Use new-style format string f"{foo:02X}"
+* Use new-style format string `f"{foo:02X}"`
 
 ## Changes in 2020 Version
 
