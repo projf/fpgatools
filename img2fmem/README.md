@@ -103,7 +103,7 @@ Red is stored in the most-significant bits, then green, then blue.
 For example, a 12-bit `[11:0]` palette value separated in Verilog:
 
 ```verilog
-[3:0] red, green, blue;  // 4 bits per channel
+reg [3:0] red, green, blue;  // 4 bits per channel
 
 always @(posedge clk) begin
     red <= palette[11:8];
@@ -117,7 +117,7 @@ You can also use a concatenation, but ensure your signals are the right width.
 For example, with a 15-bit `[14:0]` palette:
 
 ```verilog
-[4:0] red, green, blue;  // 5 bits per channel
+reg [4:0] red, green, blue;  // 5 bits per channel
 
 always @(posedge clk) begin
   {red, green, blue} <= palette;
