@@ -102,11 +102,13 @@ if output_format == 'mem':
             g = g >> 4
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X} "
-        else:  # 15 or 24-bit
-            if palette_bits == 15:
+        elif palette_bits == 15:
                 r = r >> 3
                 g = g >> 3
                 b = b >> 3
+                rgb = (r << 10) | (g << 5) | b
+                palette_output += f"{rgb:04X} "
+        else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X} "
     # replace last space with newline
     palette_output = palette_output[:-1]
@@ -122,11 +124,13 @@ elif output_format == 'coe':
             g = g >> 4
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X}, "
-        else:  # 15 or 24-bit
-            if palette_bits == 15:
+        elif palette_bits == 15:
                 r = r >> 3
                 g = g >> 3
                 b = b >> 3
+                rgb = (r << 10) | (g << 5) | b
+                palette_output += f"{rgb:04X}, "
+        else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X}, "
     # replace last comma with semicolon to complete coe statement
     palette_output = palette_output[:-2]
