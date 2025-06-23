@@ -53,23 +53,35 @@ dest_pal = dest_img.getpalette()
 # Generate hex image output
 image_data = dest_img.getdata()
 image_output = ''
+width_cnt = 0
 if output_format == 'mem':
     image_output += "// " + MESSAGE
     for d in image_data:
         if pal_size == 16:  # only one hex digit needed
-            image_output += f"{d:01X}\n"
+            image_output += f"{d:01X}"
         else:
-            image_output += f"{d:02X}\n"
+            image_output += f"{d:02X}"
+        if (width_cnt == width - 1):
+            image_output += "\n"
+            width_cnt = 0
+        else:
+            image_output += " "
+            width_cnt = width_cnt + 1
 elif output_format == 'coe':
     image_output += "; " + MESSAGE
-    image_output += f"memory_initialization_radix={colour_bits};\n"
+    image_output += f"memory_initialization_radix=16;\n"  # hex format
     image_output += "memory_initialization_vector=\n"
     for d in image_data:
         if pal_size == 16:
-            image_output += f"{d:01X},\n"
+            image_output += f"{d:01X},"
         else:
-            image_output += f"{d:02X},\n"
-
+            image_output += f"{d:02X},"
+        if (width_cnt == width - 1):
+            image_output += "\n"
+            width_cnt = 0
+        else:
+            image_output += " "
+            width_cnt = width_cnt + 1
     # replace last comma with semicolon to complete coe statement
     image_output = image_output[:-2]
     image_output += ";\n"
@@ -98,7 +110,7 @@ if output_format == 'mem':
     palette_output += "\n"
 elif output_format == 'coe':
     palette_output += "; " + MESSAGE
-    palette_output += f"memory_initialization_radix={palette_bits};\n"
+    palette_output += f"memory_initialization_radix=16;\n"
     palette_output += "memory_initialization_vector="
     for i in range(0, len(dest_pal), 3):
         r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
