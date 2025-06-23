@@ -16,7 +16,7 @@ if (len(sys.argv) != 4 and len(sys.argv) != 5):
     print("         image_file: source image file name")
     print("         colour_bits: number of colour index bits per pixel: 4, 6, or 8")
     print("         output_format: mem or coe")
-    print("         palette_bits: number of palette bits: 12 (default) or 24")
+    print("         palette_bits: number of palette bits: 12, 15, or 24")
     print("\nExample: img2fmem.py test.png 8 mem 24")
     sys.exit()
 
@@ -30,16 +30,15 @@ if colour_bits == 4:
     pal_size = 16
 elif colour_bits == 6:
     pal_size = 64
-else:
-    pal_size = 256      # default to 8-bit
-    colour_bits = 8     # explicitly assign a value so we can use in COE format
+else:  # choose default if palette size if invalid
+    pal_size = 256  # default to 8-bit
 
 output_format = sys.argv[3]
 
 palette_bits = 12       # default to 12 bit output (4 bits per colour) - as in 2018 version
 if len(sys.argv) == 5:
     palette_bits = int(sys.argv[4])
-    if palette_bits != 24:  # 24 bit output (8 bits per colour)
+    if palette_bits != 15 and palette_bits != 24:  # choose default if depth is invalid
         palette_bits = 12   # 12 bit output (4 bits per colour)
 
 # load source image
@@ -103,6 +102,12 @@ if output_format == 'mem':
             g = g >> 4
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X} "
+        elif palette_bits == 15:
+                r = r >> 3
+                g = g >> 3
+                b = b >> 3
+                rgb = (r << 10) | (g << 5) | b
+                palette_output += f"{rgb:04X} "
         else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X} "
     # replace last space with newline
@@ -119,6 +124,12 @@ elif output_format == 'coe':
             g = g >> 4
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X}, "
+        elif palette_bits == 15:
+                r = r >> 3
+                g = g >> 3
+                b = b >> 3
+                rgb = (r << 10) | (g << 5) | b
+                palette_output += f"{rgb:04X}, "
         else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X}, "
     # replace last comma with semicolon to complete coe statement

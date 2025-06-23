@@ -1,7 +1,7 @@
 # img2fmem
 
 Image to FPGA memory map converter for use with Verilog `$readmemh()` or Xilinx core generator COE.
-Output hex image uses 16, 64, or 256 colours from a 12 or 24-bit palette.
+Output hex image uses 16, 64, or 256 colours from a 12, 15, or 24-bit palette.
 Written in Python using the [Pillow](https://pillow.readthedocs.io) package.
 
 _NB. Xilinx COE format has undergone limited testing._
@@ -15,6 +15,7 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Changes in 2025 Version
 
+* Support 15-bit (RBG555) palette
 * Use palette API rather than hacking low-level data structure (hacking no longer works in newer Pillow anyway)
 * Format image output in lines to match original image for more manageable files
 * Generate more compact output for 16-colour output (one hex value)
@@ -44,7 +45,7 @@ After this initial install, you need to remember to source the environment befor
 source ./fpgatools-venv/bin/activate
 ```
 
-See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation.html) instructions for more information.
+See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/installation/basic-installation.html) instructions for more information.
 
 ## Usage
 
@@ -55,11 +56,11 @@ _Don't forget to source the Python venv if you installed Pillow that way (see ab
   * `image_file` - source image file name (see below for supported formats)
   * `colour_bits` - number of colour bits per pixel: 4, 6, or 8
   * `output_format` - `mem` or `coe`
-  * `palette_bits` - number of palette bits: 12 (default) or 24
+  * `palette_bits` - number of palette bits: 12 (RGB444), 15 (RGB555), 24 (RGB888)
 * Output is three files (in same directory as source image):
   * 4, 6, or 8-bit image in hex text format
-  * 12 or 24 bit palette in hex text format
-  * PNG preview of converted image, so you can see what it will look like
+  * 12, 15, or 24-bit palette in hex text format
+  * PNG preview to give a reasonable idea of what the converted image looks like (doesn't account for palette bits)
 
 ## Examples
 
@@ -97,15 +98,29 @@ If you're having issues:
 
 ### Colours Mixed Up
 
-The palette is of the form `0xRRGGBB` (24-bit) or `0xRGB` (12-bit). Red is stored in the most-significant byte or nibble, then green, then blue.
+Red is stored in the most-significant bits, then green, then blue.
 
-For example, for a 12-bit palette value use the following Verilog:
+For example, a 12-bit `[11:0]` palette value separated in Verilog:
 
 ```verilog
-always @(*) begin
-    red = palette[11:8];
-    green = palette[7:4];
-    blue = palette[3:0];
+reg [3:0] red, green, blue;  // 4 bits per channel
+
+always @(posedge clk) begin
+    red <= palette[11:8];
+    green <= palette[7:4];
+    blue <= palette[3:0];
+end
+```
+
+You can also use a concatenation, but ensure your signals are the right width.
+
+For example, with a 15-bit `[14:0]` palette:
+
+```verilog
+reg [4:0] red, green, blue;  // 5 bits per channel
+
+always @(posedge clk) begin
+  {red, green, blue} <= palette;
 end
 ```
 
