@@ -17,7 +17,7 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 * Use palette API rather than hacking low-level data structure (hacking no longer works in newer Pillow anyway)
 * Format image output in lines to match original image for more manageable files
-* Generate more compact output for 16 colour images
+* Generate more compact output for 16-colour output (one hex value)
 * Always set `memory_initialization_radix` to 16 (it's hex format)
 * Use new-style Python format string `f"{foo:02X}"`
 
