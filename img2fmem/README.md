@@ -15,8 +15,10 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Changes in 2025 Version
 
-* Use palette API rather than hacking low-level data structure, which no longer works in recent Pillow
+* Use palette API rather than hacking low-level data structure
+* Format image output in lines to match original image
 * Generate more compact output for 16 colour images
+* Always set `memory_initialization_radix` to 16 (it's hex format)
 * Use new-style format string f"{foo:02X}"
 
 ## Changes in 2020 Version
