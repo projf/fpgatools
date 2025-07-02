@@ -42,13 +42,13 @@ else:  # choose default if palette size if invalid
 output_format = sys.argv[3]
 
 palette_bits = 12  # default to 12 bit output (4 bits per colour) - as in 2018 version
-if len(sys.argv) == 5:
+if len(sys.argv) > 4:
     palette_bits = int(sys.argv[4])
     if palette_bits not in (15, 24):  # choose default if depth is invalid
         palette_bits = 12   # 12 bit output (4 bits per colour)
 
 pix_pack = 0
-if len(sys.argv) == 6:
+if len(sys.argv) > 5:
     pix_pack = int(sys.argv[5])
     if pix_pack not in (16, 32):  # choose default not 16 or 32-bit
         pix_pack = 0   # no packing
