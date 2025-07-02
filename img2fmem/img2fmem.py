@@ -130,42 +130,31 @@ with open(base_name + '.' + output_format, 'w', encoding="utf-8") as f:
 
 # generate hex palette output
 palette_output = output_header
+for i in range(0, len(dest_pal), 3):
+    r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
+    if palette_bits == 12:
+        r = r >> 4
+        g = g >> 4
+        b = b >> 4
+        palette_output += f"{r:01X}{g:01X}{b:01X}"
+    elif palette_bits == 15:
+        r = r >> 3
+        g = g >> 3
+        b = b >> 3
+        rgb = (r << 10) | (g << 5) | b
+        palette_output += f"{rgb:04X}"
+    else:  # 24-bit
+        palette_output += f"{r:02X}{g:02X}{b:02X}"
+    if output_format == 'coe':
+        palette_output += ", "
+    else:
+        palette_output += " "
+
+# complete palette file with newline (and semicolon for coe)
 if output_format == 'mem':
-    for i in range(0, len(dest_pal), 3):
-        r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
-        if palette_bits == 12:
-            r = r >> 4
-            g = g >> 4
-            b = b >> 4
-            palette_output += f"{r:01X}{g:01X}{b:01X} "
-        elif palette_bits == 15:
-            r = r >> 3
-            g = g >> 3
-            b = b >> 3
-            rgb = (r << 10) | (g << 5) | b
-            palette_output += f"{rgb:04X} "
-        else:  # 24-bit
-            palette_output += f"{r:02X}{g:02X}{b:02X} "
-    # replace last space with newline
     palette_output = palette_output[:-1]
     palette_output += "\n"
-elif output_format == 'coe':
-    for i in range(0, len(dest_pal), 3):
-        r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
-        if palette_bits == 12:
-            r = r >> 4
-            g = g >> 4
-            b = b >> 4
-            palette_output += f"{r:01X}{g:01X}{b:01X}, "
-        elif palette_bits == 15:
-            r = r >> 3
-            g = g >> 3
-            b = b >> 3
-            rgb = (r << 10) | (g << 5) | b
-            palette_output += f"{rgb:04X}, "
-        else:  # 24-bit
-            palette_output += f"{r:02X}{g:02X}{b:02X}, "
-    # replace last comma with semicolon to complete coe statement
+else:
     palette_output = palette_output[:-2]
     palette_output += ";\n"
 
@@ -173,5 +162,5 @@ elif output_format == 'coe':
 with open(base_name + '_palette.' + output_format, 'w', encoding="utf-8") as f:
     f.write(palette_output)
 
-# save preview image
+# save preview image - doesn't currently account for 12 or 15-bit output
 dest_img.save(base_name + '_preview.png')
