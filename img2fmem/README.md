@@ -16,6 +16,7 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 ## Changes in 2025 Version
 
 * Support 15-bit (RBG555) palette
+* Support packed 32-bit output
 * Use palette API rather than hacking low-level data structure (hacking no longer works in newer Pillow anyway)
 * Format image output in lines to match original image for more manageable files
 * Generate more compact output for 16-colour output (one hex value)
@@ -54,11 +55,12 @@ _Don't forget to source the Python venv if you installed Pillow that way (see ab
 * To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
 * Input Arguments
   * `image_file` - source image file name (see below for supported formats)
-  * `colour_bits` - number of colour bits per pixel: 4, 6, or 8
+  * `colour_bits` - number of colour bits per pixel: 1, 4, 6, or 8
   * `output_format` - `mem` or `coe`
   * `palette_bits` - number of palette bits: 12 (RGB444), 15 (RGB555), 24 (RGB888)
+  * `pack` - whether to pack the pixels into 32-bit words: 32 (packed) or 0 (unpacked)
 * Output is three files (in same directory as source image):
-  * 4, 6, or 8-bit image in hex text format
+  * 1, 4, 6, or 8-bit image in hex text format
   * 12, 15, or 24-bit palette in hex text format
   * PNG preview to give a reasonable idea of what the converted image looks like (doesn't account for palette bits)
 

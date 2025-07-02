@@ -51,7 +51,13 @@ if len(sys.argv) > 5:
     pack_pixels = int(sys.argv[5])
     if pack_pixels != 32:  # 32-bit only valid packing at present
         pack_pixels = 0   # no packing
-pack_num = pack_pixels // colr_bits
+
+# we only pack 4 x 6-bit pixels into a word
+if colr_bits == 6:
+    pack_colr_bits = 8
+else:
+    pack_colr_bits = colr_bits
+pack_num = pack_pixels // pack_colr_bits
 
 # load source image
 source_img = Image.open(input_file)
@@ -79,7 +85,7 @@ for p in dest_pixels:
     if pack_pixels == 0:
         dest_list.append(p)
     else:
-        shift = pack_pixels - (pack_cnt + 1) * colr_bits
+        shift = pack_pixels - (pack_cnt + 1) * pack_colr_bits
         packed |= (p << shift)
         if pack_cnt == pack_num - 1:
             dest_list.append(packed)
