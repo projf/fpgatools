@@ -14,7 +14,7 @@ if (len(sys.argv) != 4 and len(sys.argv) != 5):
     print("Convert image files to FPGA memory maps in $readmemh or Xilinx COE format.")
     print("usage: img2fmem.py image_file colour_bits output_format palette_bits")
     print("         image_file: source image file name")
-    print("         colour_bits: number of colour index bits per pixel: 4, 6, or 8")
+    print("         colour_bits: number of colour index bits per pixel: 1, 2, 4, 6, or 8")
     print("         output_format: mem or coe")
     print("         palette_bits: number of palette bits: 12, 15, or 24")
     print("\nExample: img2fmem.py test.png 8 mem 24")
@@ -26,7 +26,11 @@ input_file = sys.argv[1]
 base_name = os.path.splitext(input_file)[0]
 
 colour_bits = int(sys.argv[2])
-if colour_bits == 4:
+if colour_bits == 1:
+    pal_size = 2
+elif colour_bits == 2:
+    pal_size = 4
+elif colour_bits == 4:
     pal_size = 16
 elif colour_bits == 6:
     pal_size = 64
@@ -35,19 +39,22 @@ else:  # choose default if palette size if invalid
 
 output_format = sys.argv[3]
 
-palette_bits = 12       # default to 12 bit output (4 bits per colour) - as in 2018 version
+palette_bits = 12  # default to 12 bit output (4 bits per colour) - as in 2018 version
 if len(sys.argv) == 5:
     palette_bits = int(sys.argv[4])
-    if palette_bits != 15 and palette_bits != 24:  # choose default if depth is invalid
+    if palette_bits not in (15, 24):  # choose default if depth is invalid
         palette_bits = 12   # 12 bit output (4 bits per colour)
 
 # load source image
 source_img = Image.open(input_file)
 (width, height) = source_img.size  # used for formatting output
 
-# Convert to limited colour palette
-dest_img = source_img.quantize(colors=pal_size, method=Image.Quantize.MEDIANCUT)
-dest_pal = dest_img.getpalette()
+if pal_size == 2:  # convert to monochrome with dithering
+    dest_img = source_img.convert(mode='1', dither=Image.Dither.FLOYDSTEINBERG)
+    dest_pal = [0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF]
+else:  # convert to limited colour palette
+    dest_img = source_img.quantize(colors=pal_size, method=Image.Quantize.MEDIANCUT)
+    dest_pal = dest_img.getpalette()
 
 # Generate hex image output
 image_data = dest_img.getdata()
@@ -56,11 +63,16 @@ width_cnt = 0
 if output_format == 'mem':
     image_output += "// " + MESSAGE
     for d in image_data:
-        if pal_size == 16:  # only one hex digit needed
+        if pal_size == 2:
+            if d == 0:
+                image_output += "1"
+            else:
+                image_output += "0"
+        elif pal_size <= 16:  # only one hex digit needed
             image_output += f"{d:01X}"
         else:
             image_output += f"{d:02X}"
-        if (width_cnt == width - 1):
+        if width_cnt == width - 1:
             image_output += "\n"
             width_cnt = 0
         else:
@@ -68,14 +80,19 @@ if output_format == 'mem':
             width_cnt = width_cnt + 1
 elif output_format == 'coe':
     image_output += "; " + MESSAGE
-    image_output += f"memory_initialization_radix=16;\n"  # hex format
+    image_output += "memory_initialization_radix=16;\n"  # hex format
     image_output += "memory_initialization_vector=\n"
     for d in image_data:
-        if pal_size == 16:
+        if pal_size == 2:
+            if d == 0:
+                image_output += "1,"
+            else:
+                image_output += "0,"
+        elif pal_size <= 16:
             image_output += f"{d:01X},"
         else:
             image_output += f"{d:02X},"
-        if (width_cnt == width - 1):
+        if width_cnt == width - 1:
             image_output += "\n"
             width_cnt = 0
         else:
@@ -103,11 +120,11 @@ if output_format == 'mem':
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X} "
         elif palette_bits == 15:
-                r = r >> 3
-                g = g >> 3
-                b = b >> 3
-                rgb = (r << 10) | (g << 5) | b
-                palette_output += f"{rgb:04X} "
+            r = r >> 3
+            g = g >> 3
+            b = b >> 3
+            rgb = (r << 10) | (g << 5) | b
+            palette_output += f"{rgb:04X} "
         else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X} "
     # replace last space with newline
@@ -115,7 +132,7 @@ if output_format == 'mem':
     palette_output += "\n"
 elif output_format == 'coe':
     palette_output += "; " + MESSAGE
-    palette_output += f"memory_initialization_radix=16;\n"
+    palette_output += "memory_initialization_radix=16;\n"
     palette_output += "memory_initialization_vector="
     for i in range(0, len(dest_pal), 3):
         r, g, b = dest_pal[i], dest_pal[i+1], dest_pal[i+2]
@@ -125,11 +142,11 @@ elif output_format == 'coe':
             b = b >> 4
             palette_output += f"{r:01X}{g:01X}{b:01X}, "
         elif palette_bits == 15:
-                r = r >> 3
-                g = g >> 3
-                b = b >> 3
-                rgb = (r << 10) | (g << 5) | b
-                palette_output += f"{rgb:04X}, "
+            r = r >> 3
+            g = g >> 3
+            b = b >> 3
+            rgb = (r << 10) | (g << 5) | b
+            palette_output += f"{rgb:04X}, "
         else:  # 24-bit
             palette_output += f"{r:02X}{g:02X}{b:02X}, "
     # replace last comma with semicolon to complete coe statement
