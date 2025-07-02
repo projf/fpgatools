@@ -14,10 +14,10 @@ if len(sys.argv) not in (4, 5, 6):
     print("Convert image files to FPGA memory maps in $readmemh or Xilinx COE format.")
     print("usage: img2fmem.py image_file colour_bits output_format palette_bits pack")
     print("         image_file: source image file name")
-    print("         colour_bits - number of colour index bits per pixel: 1, 2, 4, 6, or 8")
+    print("         colour_bits - number of colour index bits per pixel: 1, 4, 6, or 8")
     print("         output_format: mem or coe")
     print("         palette_bits (optional) - number of palette bits: 12, 15, or 24")
-    print("         pack (optional) - pack pixels into this many bits: none, 16, 32")
+    print("         pack (optional) - pixel packing mode: none, 32")
     print("\nExample: img2fmem.py test.png 4 mem 15 32")
     sys.exit()
 
@@ -30,8 +30,6 @@ base_name = os.path.splitext(input_file)[0]
 colour_bits = int(sys.argv[2])
 if colour_bits == 1:
     pal_size = 2
-elif colour_bits == 2:
-    pal_size = 4
 elif colour_bits == 4:
     pal_size = 16
 elif colour_bits == 6:
@@ -50,7 +48,7 @@ if len(sys.argv) > 4:
 pix_pack = 0
 if len(sys.argv) > 5:
     pix_pack = int(sys.argv[5])
-    if pix_pack not in (16, 32):  # choose default not 16 or 32-bit
+    if pix_pack != 32:  # 32-bit only valid packing at present
         pix_pack = 0   # no packing
 print (f"    DEBUG: pixel packing {pix_pack}")
 
