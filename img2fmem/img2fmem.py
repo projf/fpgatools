@@ -77,22 +77,22 @@ dest_pixels = dest_img.getdata()
 
 # process and optionally pack pixels
 dest_list = []
-pack_cnt = 0
-packed = 0
+pack_cnt = 0  # counter for pack loop
+p_packed = 0  # pixels packed into word
 for p in dest_pixels:
     if colr_bits == 1 and p != 0:  # convert monochrome white to 1
         p = 1
-    if pack_pixels == 0:
-        dest_list.append(p)
-    else:
-        shift = pack_pixels - (pack_cnt + 1) * pack_colr_bits
-        packed |= (p << shift)
+    if pack_pixels == 32:
+        shift = pack_cnt * pack_colr_bits
+        p_packed |= (p << shift)
         if pack_cnt == pack_num - 1:
-            dest_list.append(packed)
+            dest_list.append(p_packed)
             pack_cnt = 0
-            packed = 0
+            p_packed = 0
         else:
             pack_cnt += 1
+    else:  # not packed
+        dest_list.append(p)
 
 # memory file header
 if output_format == 'mem':
@@ -123,7 +123,7 @@ for d in dest_list:
         width_cnt = 0
     else:
         image_output += " "
-        width_cnt = width_cnt + 1
+        width_cnt += 1
 
 # replace last comma with semicolon to complete coe statement
 if output_format == 'coe':

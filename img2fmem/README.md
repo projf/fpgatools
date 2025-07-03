@@ -74,6 +74,12 @@ For an image called `acme.tiff` that you want converted to 8-bit colour with 24-
 
     ./img2fmem.py acme.tiff 6 coe 24
 
+## Packed Format
+
+In the packed format, multiple pixels are combined into one 32-bit value. Packing is little endian, as most contemporary CPUs (Arm, x86, RISC-V) are little endian. This format suits 32-bit vram.
+
+For example, if the first eight pixels of a 16-colour (4-bit) image are: `7,6,6,6,6,7,7,9` then the packed 32-bit value is `97766667`.
+
 ## Supported Image Formats
 
 * Your source image needs to be in a [format Pillow supports](http://pillow.readthedocs.io/en/latest/handbook/image-file-formats.html): PNG, JPEG, TIFF, BMP are amongst the formats supported.
