@@ -1,8 +1,7 @@
 # img2fmem
 
-Image to FPGA memory map converter for use with Verilog `$readmemh()` or Xilinx core generator COE.
-Output hex image uses 16, 64, or 256 colours from a 12, 15, or 24-bit palette.
-Written in Python using the [Pillow](https://pillow.readthedocs.io) package.
+Image to FPGA memory map converter for Verilog `$readmemh()` and Xilinx core generator COE.
+Output can be in 2, 16, 64, or 256 colours with a 12 (RGB444), 15 (RGB555), or 24-bit (RGB888) palette. Monochrome (2 colour) output uses Floyd-Steinberg dithering. Written in Python using the [Pillow](https://pillow.readthedocs.io) package.
 
 _NB. Xilinx COE format has undergone limited testing._
 
@@ -15,11 +14,12 @@ Licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ## Changes in 2025 Version
 
-* Support 15-bit (RBG555) palette
+* Support 15-bit (RBG555) palette in addition to 12-bit (RGB444) and 24-bit (RGB888)
+* Support packed 32-bit output
 * Use palette API rather than hacking low-level data structure (hacking no longer works in newer Pillow anyway)
 * Format image output in lines to match original image for more manageable files
 * Generate more compact output for 16-colour output (one hex value)
-* Always set `memory_initialization_radix` to 16 (it's hex format)
+* Always set COE `memory_initialization_radix` to 16 (it's hex format)
 * Use new-style Python format string `f"{foo:02X}"`
 
 ## Changes in 2020 Version
@@ -51,26 +51,39 @@ See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/insta
 
 _Don't forget to source the Python venv if you installed Pillow that way (see above)._
 
-* To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
+* To use run: `img2fmem.py image_file colour_bits output_format palette_bits pack`
 * Input Arguments
   * `image_file` - source image file name (see below for supported formats)
-  * `colour_bits` - number of colour bits per pixel: 4, 6, or 8
+  * `colour_bits` - number of colour bits per pixel: 1, 4, 6, or 8
   * `output_format` - `mem` or `coe`
   * `palette_bits` - number of palette bits: 12 (RGB444), 15 (RGB555), 24 (RGB888)
+  * `pack` - whether to pack the pixels into 32-bit words: 32 (packed) or 0 (unpacked)
 * Output is three files (in same directory as source image):
-  * 4, 6, or 8-bit image in hex text format
+  * 1, 4, 6, or 8-bit image in hex text format
   * 12, 15, or 24-bit palette in hex text format
-  * PNG preview to give a reasonable idea of what the converted image looks like (doesn't account for palette bits)
+  * PNG preview to give a reasonable idea of what the converted image looks like
+
+You can omit `pack` or both `pack` and `palette_bits`, in which case the image will use 12-bit palette and won't be packed.
 
 ## Examples
 
 For an image called `acme.png` that you want converted to 4-bit colour with 12-bit palette for use with Verilog `$readmemh()`:
 
-    ./img2fmem.py acme.png 4 mem 12
+    img2fmem.py acme.png 4 mem 12 0
 
 For an image called `acme.tiff` that you want converted to 8-bit colour with 24-bit palette for use with Xilinx core generator:
 
-    ./img2fmem.py acme.tiff 6 coe 24
+    img2fmem.py acme.tiff 6 coe 24 0
+
+## Packed Format
+
+In the packed format, multiple pixels are combined into one 32-bit value. Packing is little endian, as most contemporary CPUs (Arm, x86, RISC-V) are little endian. This format suits 32-bit vram.
+
+For example, if the first eight pixels of a 16-colour (4-bit) image are: `7,6,6,6,6,7,7,9` then the packed 32-bit value is `97766667`.
+
+For an image called `crocus.png` that you want converted to monochrome with 15-bit palette and packed into 32 bits for use with Verilog $readmemh:
+
+    img2fmem.py crocus.png 1 mem 15 32
 
 ## Supported Image Formats
 
@@ -94,7 +107,6 @@ If you're having issues:
 
 * Check you're using a supported image format without transparency (see above)
 * Check the script is working correctly using using one of the included test images (e.g. photo.png)
-* Make sure you're using Python 3
 
 ### Colours Mixed Up
 
