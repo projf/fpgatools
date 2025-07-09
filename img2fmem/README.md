@@ -1,8 +1,7 @@
 # img2fmem
 
 Image to FPGA memory map converter for Verilog `$readmemh()` and Xilinx core generator COE.
-Output supports 2, 16, 64, or 256 colours with a 12, 15, or 24-bit palette.
-Written in Python using the [Pillow](https://pillow.readthedocs.io) package.
+Output can be in 2, 16, 64, or 256 colours with a 12 (RGB444), 15 (RGB555), or 24-bit (RGB888) palette. Monochrome (2 colour) output uses Floyd-Steinberg dithering. Written in Python using the [Pillow](https://pillow.readthedocs.io) package.
 
 _NB. Xilinx COE format has undergone limited testing._
 
@@ -52,7 +51,7 @@ See official [Pillow Installation](https://pillow.readthedocs.io/en/stable/insta
 
 _Don't forget to source the Python venv if you installed Pillow that way (see above)._
 
-* To use run: `img2fmem.py image_file colour_bits output_format palette_bits`
+* To use run: `img2fmem.py image_file colour_bits output_format palette_bits pack`
 * Input Arguments
   * `image_file` - source image file name (see below for supported formats)
   * `colour_bits` - number of colour bits per pixel: 1, 4, 6, or 8
@@ -63,6 +62,8 @@ _Don't forget to source the Python venv if you installed Pillow that way (see ab
   * 1, 4, 6, or 8-bit image in hex text format
   * 12, 15, or 24-bit palette in hex text format
   * PNG preview to give a reasonable idea of what the converted image looks like
+
+You can omit `pack` or both `pack` and `palette_bits`, in which case the image will use 12-bit palette and won't be packed.
 
 ## Examples
 
