@@ -81,7 +81,7 @@ In the packed format, multiple pixels are combined into one 32-bit value. Packin
 
 For example, if the first eight pixels of a 16-colour (4-bit) image are: `7,6,6,6,6,7,7,9` then the packed 32-bit value is `97766667`.
 
-For an image called `crocus.png` that you want converted to monochrome with 12-bit palette and packed into 32 bits for use with Verilog `$readmemh()`:
+For an image called `crocus.png` that you want converted to monochrome with 15-bit palette and packed into 32 bits for use with Verilog $readmemh:
 
     img2fmem.py crocus.png 1 mem 15 32
 
@@ -107,7 +107,6 @@ If you're having issues:
 
 * Check you're using a supported image format without transparency (see above)
 * Check the script is working correctly using using one of the included test images (e.g. photo.png)
-* Make sure you're using Python 3
 
 ### Colours Mixed Up
 
