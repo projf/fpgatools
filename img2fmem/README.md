@@ -53,12 +53,12 @@ _Don't forget to source the Python venv if you installed Pillow that way (see ab
 * To use run: `img2fmem.py image_file colour_bits output_format palette_bits pack`
 * Input Arguments
   * `image_file` - source image file name (see below for supported formats)
-  * `colour_bits` - number of colour bits per pixel: 1, 4, 6, or 8
+  * `colour_bits` - number of colour bits per pixel: 1, 2, 4, 6, or 8
   * `output_format` - `mem` or `coe`
   * `palette_bits` - number of palette bits: 12 (RGB444), 15 (RGB555), 24 (RGB888)
   * `pack` - whether to pack the pixels into 32-bit words: 32 (packed) or 0 (unpacked)
 * Output is three files (in same directory as source image):
-  * 1, 4, 6, or 8-bit image in hex text format
+  * 1, 2, 4, 6, or 8-bit image in hex text format
   * 12, 15, or 24-bit palette in hex text format
   * PNG preview to give a reasonable idea of what the converted image looks like
 
