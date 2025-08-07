@@ -1,12 +1,12 @@
 # FPGA Tools
 
-Handy Python tools for FPGA development by [Project F](https://projectf.io/). For our Verilog designs see [projf-explore](https://github.com/projf/projf-explore).
+Handy Python tools for FPGA development by [Project F](https://projectf.io/). For our Verilog designs see [Isle](https://github.com/projf/isle) and [projf-explore](https://github.com/projf/projf-explore).
 
 Licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## img2fmem
 
-Bitmap image to FPGA memory map converter for Verilog $readmemh and Xilinx core generator COE. Supports many bitmap formats as input. Output can be in 2, 16, 64, or 256 colours with a 12 (RGB444), 15 (RGB555), or 24-bit (RGB888) palette. Monochrome (2 colour) output uses Floyd-Steinberg dithering.
+Bitmap image to FPGA memory map converter for Verilog $readmemh and Xilinx core generator COE. Supports many bitmap formats as input. Output can be in 2, 4, 16, 64, or 256 colours with a 12-bit (RGB444), 15-bit (RGB555), or 24-bit (RGB888) palette. Monochrome (2 colour) output uses Floyd-Steinberg dithering.
 
 For more details see the [img2fmem README](img2fmem/).
 
